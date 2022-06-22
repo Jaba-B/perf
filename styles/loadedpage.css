@@ -8,7 +8,7 @@
 }
 
 .added-section__content {
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
     height: 244px;
     margin-top: 96px;
