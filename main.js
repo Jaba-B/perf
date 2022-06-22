@@ -3,7 +3,38 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-mixed-operators */
 
+import './styles/loadedpage.css';
 import './styles/style.css';
+
+const template = document.createElement('template');
+template.innerHTML = `
+  <style>
+    .invisible { display: none }
+    button {
+      padding: 0px 0px;
+      border: 0px;
+      margin 0px 0px;
+      background: none;
+    }
+    .app-section
+  </style>
+  <div> <slot name="div" /> </div>
+  <h1> <slot name="title" /> </h1>
+  <h2> <slot name="subtitle" /> </h2>
+  <h2> <slot name="h3" /> </h2>
+  <article> <slot name="article" /> </article>
+  <button> <slot name="btn" /> </button>
+  <form> <slot name="form" /> </form>
+`;
+class WebsiteSection extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+  }
+}
+
+window.customElements.define('website-section', WebsiteSection);
 
 const form = document.querySelector('added-section__email-box');
 const btn = document.getElementById('subscribeBtn');
@@ -51,4 +82,3 @@ const remove = () => {
 
 // advanced();
 // remove();
-
