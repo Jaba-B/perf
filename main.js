@@ -63,6 +63,7 @@ btn.addEventListener('click', () => {
       input.value = '';
     }
   } else {
+    // eslint-disable-next-line no-alert
     alert('false');
   }
   const emailInput = document.querySelector('added-section__email-btn');
