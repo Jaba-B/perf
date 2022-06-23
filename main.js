@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/extensions */
 /* eslint-disable no-mixed-operators */
-
 import './styles/loadedpage.css';
 import './styles/style.css';
 
