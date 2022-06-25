@@ -72,6 +72,7 @@ function sendRequest(info) {
 
 if (window.Worker) {
   const btns = document.getElementsByClassName('app-section__button');
+  const input = document.getElementById('email-input');
   const url = new URL('./worker.js', import.meta.url);
   const worker = new Worker(url);
 
@@ -81,11 +82,17 @@ if (window.Worker) {
       worker.postMessage(this.textContent);
       console.log(this.textContent);
       worker.onmessage = (e) => {
-        console.log(e.data);
         sendRequest(e.data);
       };
     });
   }
+  input.addEventListener('click', function () {
+    worker.postMessage(this.textContent);
+    console.log(this.textContent);
+    worker.onmessage = (e) => {
+      sendRequest(e.data);
+    };
+  });
 }
 
 // sending email

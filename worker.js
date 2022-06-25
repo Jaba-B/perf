@@ -7,7 +7,6 @@ onmessage = function (e) {
   arr.push(click);
   if (arr.length > 4) {
     postMessage(arr);
-    console.log('5x is sent back');
     arr.length = 0;
   }
 };
