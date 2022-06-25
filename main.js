@@ -39,7 +39,7 @@ window.customElements.define('website-section', WebsiteSection);
 // Web-worker task
 function sendRequest(info) {
   const xhr = new XMLHttpRequest();
-  xhr.open('post', 'http://localhost:8080/analytics/user');
+  xhr.open('post', 'api/analytics/user');
   xhr.responseType = 'json';
   xhr.setRequestHeader('Content-Type', 'Application/json');
   xhr.onload = () => {
@@ -55,19 +55,37 @@ function sendRequest(info) {
   console.log(`${info} is sent`);
 }
 
-const btns = document.getElementsByClassName('app-section__button');
-const worker = new Worker('./worker.js');
+// const btns = document.getElementsByClassName('app-section__button');
+// const worker = new Worker('./worker.js');
 
-for (let i = 0; i < btns.length; i++) {
-  // eslint-disable-next-line no-loop-func
-  btns[i].addEventListener('click', function () {
-    worker.postMessage(this.textContent);
-    console.log(this.textContent);
-    worker.onmessage = (e) => {
-      console.log(e.data);
-      sendRequest(e.data);
-    };
-  });
+// for (let i = 0; i < btns.length; i++) {
+//   // eslint-disable-next-line no-loop-func
+//   btns[i].addEventListener('click', function () {
+//     worker.postMessage(this.textContent);
+//     console.log(this.textContent);
+//     worker.onmessage = (e) => {
+//       console.log(e.data);
+//       sendRequest(e.data);
+//     };
+//   });
+// }
+
+if (window.Worker) {
+  const btns = document.getElementsByClassName('app-section__button');
+  const url = new URL('./worker.js', import.meta.url);
+  const worker = new Worker(url);
+
+  for (let i = 0; i < btns.length; i++) {
+    // eslint-disable-next-line no-loop-func
+    btns[i].addEventListener('click', function () {
+      worker.postMessage(this.textContent);
+      console.log(this.textContent);
+      worker.onmessage = (e) => {
+        console.log(e.data);
+        sendRequest(e.data);
+      };
+    });
+  }
 }
 
 // sending email
