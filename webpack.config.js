@@ -11,6 +11,14 @@ module.exports = {
     filename: 'index.js',
     assetModuleFilename: '[name][ext]',
   },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000/',
+        pathRewrite: { '^/api': '' },
+      },
+    },
+  },
   module: {
     rules: [
       {
