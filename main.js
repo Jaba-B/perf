@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable import/extensions */
 /* eslint-disable no-mixed-operators */
+/* eslint-disable no-plusplus */
 import './styles/loadedpage.css';
 import './styles/style.css';
 
@@ -35,50 +36,86 @@ class WebsiteSection extends HTMLElement {
 
 window.customElements.define('website-section', WebsiteSection);
 
-const form = document.querySelector('added-section__email-box');
-const btn = document.getElementById('subscribeBtn');
-const h2 = document.getElementById('h2');
-btn.addEventListener('click', () => {
-  const input = document.getElementById('email-input');
-  const validEmailEndings = ['gmail.com', 'outlook.com', 'yandex.ru'];
-  const email = input.value;
-  const ending = email.substring(email.indexOf('@') + 1);
-  const start = email.substring(0, email.indexOf('@'));
-  if (ending === validEmailEndings[0] && start.length > 0
-            || ending === validEmailEndings[1] && start.length > 0
-            || ending === validEmailEndings[2] && start.length > 0) {
-    localStorage.setItem('email', email);
-    if (btn.innerHTML == 'SUBSCRIBE') {
-      input.style.display = 'none';
-      btn.style.height = '42px';
-      btn.innerHTML = 'UNSUBSCRIBE';
-      form.style.justifyContent = 'center';
+// Web-worker task
+function sendRequest(info) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('post', 'http://localhost:8080/analytics/user');
+  xhr.responseType = 'json';
+  xhr.setRequestHeader('Content-Type', 'Application/json');
+  xhr.onload = () => {
+    const data = xhr.response;
+    if (xhr.status == 422) {
+      window.alert(JSON.stringify(data));
     } else {
-      input.style.display = 'inline-block';
-      btn.style.height = '42px';
-      btn.innerHTML = 'SUBSCRIBE';
-      form.style.justifyContent = 'space-between';
-      localStorage.removeItem('email');
-      input.value = '';
+      console.log(data);
     }
-  } else {
-    // eslint-disable-next-line no-alert
-    alert('false');
-  }
-  const emailInput = document.querySelector('added-section__email-btn');
-  emailInput.style.display = 'none';
-}, false);
+  };
+  xhr.onerror = (error) => { console.log(error); };
+  xhr.send(JSON.stringify({ info }));
+  console.log(`${info} is sent`);
+}
 
-const advanced = () => {
-  btn.textContent = 'Subscribe to Advanced Program';
-  h2.textContent = 'Join Our Advanced Program';
-};
+const btns = document.getElementsByClassName('app-section__button');
+const worker = new Worker('./worker.js');
 
-const remove = () => {
-  const parent = document.getElementById('app-container');
-  const child = parent.children[4];
-  child.remove();
-};
+for (let i = 0; i < btns.length; i++) {
+  // eslint-disable-next-line no-loop-func
+  btns[i].addEventListener('click', function () {
+    worker.postMessage(this.textContent);
+    console.log(this.textContent);
+    worker.onmessage = (e) => {
+      console.log(e.data);
+      sendRequest(e.data);
+    };
+  });
+}
+
+// sending email
+// const form = document.querySelector('added-section__email-box');
+// const btn = document.getElementById('subscribeBtn');
+// const h2 = document.getElementById('h2');
+// btn.addEventListener('click', () => {
+//   const input = document.getElementById('email-input');
+//   const validEmailEndings = ['gmail.com', 'outlook.com', 'yandex.ru'];
+//   const email = input.value;
+//   const ending = email.substring(email.indexOf('@') + 1);
+//   const start = email.substring(0, email.indexOf('@'));
+//   if (ending === validEmailEndings[0] && start.length > 0
+//             || ending === validEmailEndings[1] && start.length > 0
+//             || ending === validEmailEndings[2] && start.length > 0) {
+//     localStorage.setItem('email', email);
+//     clicksToWorker();
+//     if (btn.innerHTML == 'SUBSCRIBE') {
+//       input.style.display = 'none';
+//       btn.style.height = '42px';
+//       btn.innerHTML = 'UNSUBSCRIBE';
+//       // form.style.justifyContent = 'center';
+//     } else {
+//       input.style.display = 'inline-block';
+//       btn.style.height = '42px';
+//       btn.innerHTML = 'SUBSCRIBE';
+//       // form.style.justifyContent = 'space-between';
+//       localStorage.removeItem('email');
+//       input.value = '';
+//     }
+//   } else {
+//     // eslint-disable-next-line no-alert
+//     alert('false');
+//   }
+//   const emailInput = document.querySelector('added-section__email-btn');
+//   // emailInput.style.display = 'none';
+// }, false);
+
+// const advanced = () => {
+//   btn.textContent = 'Subscribe to Advanced Program';
+//   h2.textContent = 'Join Our Advanced Program';
+// };
+
+// const remove = () => {
+//   const parent = document.getElementById('app-container');
+//   const child = parent.children[4];
+//   child.remove();
+// };
 
 // advanced();
 // remove();
