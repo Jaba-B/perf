@@ -163,6 +163,7 @@ window.addEventListener("load", () => {
   const navEntries = performance.getEntriesByType("navigation");
   navEntries.forEach( entry => {
     const ttfb = entry.responseStart-entry.fetchStart;
-    perf("navigation", "load-page", entry.responseStart-entry.fetchStart)
+    perf("navigation", "load-page", entry.responseStart-entry.fetchStart);
+    perf("memory", "memory-usage/bytes", performance.memory.usedJSHeapSize);
   })
 })
