@@ -1,5 +1,6 @@
 @import url(normalize.css);
 @import url(loadedpage.css);
+@import url(community.css);
 
 body {
   background-color: #fff;

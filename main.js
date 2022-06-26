@@ -6,6 +6,9 @@
 
 import './styles/loadedpage.css';
 import './styles/style.css';
+import { community } from './community.js';
+
+window.addEventListener('load', community());
 
 const template = document.createElement('template');
 template.innerHTML = `
