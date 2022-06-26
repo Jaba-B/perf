@@ -155,14 +155,14 @@ function perf(type, name, data) {
 
 window.addEventListener("load", () => {
   //performacne of server
-  // const communityObserver = new PerformanceObserver( list => {
-  //   list.getEntries().forEach( entry => {
-  //     perf(entry.entryType, entry.name, entry.startTime);
-  //   })
-  // })
-  // communityObserver.observe({ entryTypes: ["mark"]});
-  const entries = performance.getEntriesByType("measure")
+  const entries = performance.getEntriesByType("measure");
   entries.forEach( entry => {
     perf("mark", entry.name, entry.duration); // community performance
+  });
+
+  const navEntries = performance.getEntriesByType("navigation");
+  navEntries.forEach( entry => {
+    const ttfb = entry.responseStart-entry.fetchStart;
+    perf("navigation", "load-page", entry.responseStart-entry.fetchStart)
   })
 })
