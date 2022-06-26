@@ -148,3 +148,21 @@ if (window.Worker) {
 
 // advanced();
 // remove();
+
+function perf(type, name, data) {
+  console.log(`${ type }: ${ name } | ${ data?data:"" }`)
+}
+
+window.addEventListener("load", () => {
+  //performacne of server
+  // const communityObserver = new PerformanceObserver( list => {
+  //   list.getEntries().forEach( entry => {
+  //     perf(entry.entryType, entry.name, entry.startTime);
+  //   })
+  // })
+  // communityObserver.observe({ entryTypes: ["mark"]});
+  const entries = performance.getEntriesByType("measure")
+  entries.forEach( entry => {
+    perf("mark", entry.name, entry.duration); // community performance
+  })
+})

@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 
 export const community = () => {
+    performance.mark("communityStart")
     const firstUserImg = document.querySelector('.first-user__img');
     const firstUserP = document.querySelector('.first-user__p');
     const firstUserUsername = document.querySelector('.first-user__username');
@@ -41,5 +42,7 @@ export const community = () => {
       thirdUserPosition.innerHTML = `${thirdUser.position}`;
     };
     xhr.send();
+    performance.mark("communityEnd");
+    performance.measure("community", "communityStart", "communityEnd");
   };
   
