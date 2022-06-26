@@ -3,6 +3,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-plusplus */
+
 import './styles/loadedpage.css';
 import './styles/style.css';
 
