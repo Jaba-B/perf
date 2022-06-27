@@ -150,20 +150,30 @@ if (window.Worker) {
 // remove();
 
 function perf(type, name, data) {
-  console.log(`${ type }: ${ name } | ${ data?data:"" }`)
+  console.log(`${type}: ${name} | ${data || ''}`);
 }
 
-window.addEventListener("load", () => {
-  //performacne of server
-  const entries = performance.getEntriesByType("measure");
-  entries.forEach( entry => {
-    perf("mark", entry.name, entry.duration); // community performance
+window.addEventListener('load', () => {
+  // performacne of server
+  const entries = performance.getEntriesByType('measure');
+  entries.forEach((entry) => {
+    perf('mark', entry.name, entry.duration); // community performance
   });
 
-  const navEntries = performance.getEntriesByType("navigation");
-  navEntries.forEach( entry => {
-    const ttfb = entry.responseStart-entry.fetchStart;
-    perf("navigation", "load-page", entry.responseStart-entry.fetchStart);
-    perf("memory", "memory-usage/bytes", performance.memory.usedJSHeapSize);
-  })
-})
+  const navEntries = performance.getEntriesByType('navigation');
+  navEntries.forEach((entry) => {
+    const ttfb = entry.responseStart - entry.fetchStart;
+    perf('navigation', 'load-page', entry.responseStart - entry.fetchStart);
+    perf('memory', 'memory-usage/bytes', performance.memory.usedJSHeapSize);
+  });
+
+  // eslint-disable-next-line prefer-destructuring
+  const serverTiming = performance.getEntriesByType('navigation')[0].serverTiming;
+  const metrics = serverTiming.forEach((timing) => {
+    perf('Server', timing.name, timing.duration);
+  });
+  console.log('metrics', metrics);
+
+  const entry = performance.getEntriesByType('resource');
+  console.log('metrics', entry[0].serverTiming);
+});
